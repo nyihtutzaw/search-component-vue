@@ -1,0 +1,1 @@
+export const API_URL = 'https://arbimon.rfcx.org/api/user/projectlist';

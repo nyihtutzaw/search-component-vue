@@ -15,66 +15,17 @@
 </template>
 
 <script lang="ts">
-import { ref, watch } from 'vue';
-import axios from 'axios';
-
-interface SearchResult {
-  id: number;
-  name: string;
-  description: string;
-}
+import { useSearch } from '../hooks/useSearch';
 
 export default {
   name: 'SearchBox',
-  data() {
-    return {
-      query: '',
-      results: [] as SearchResult[],
-    };
-  },
   setup() {
-    const handleLazySearch = () => {
-      debounce(() => {
-        fetchresults();
-      }, 500)();
-    };
-
-    const debounce = (func: Function, delay: number) => {
-      let timeoutId:number;
-      return () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(func, delay);
-      };
-    };
-
-    const fetchresults = async () => {
-      if (query.value.length < 3) {
-        results.value = [];
-        return;
-      }
-
-      try {
-        const response = await axios.get<SearchResult[]>(`https://arbimon.rfcx.org/api/user/projectlist?q=${encodeURIComponent(query.value)}`);
-        results.value = response.data;
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const highlightSearchText = (text: string) => {
-      const searchTerm = query.value.toLowerCase();
-      const regex = new RegExp(searchTerm, 'gi');
-      return text.replace(regex, '<strong>$&</strong>');
-    };
-
-    const query = ref('');
-    const results = ref([] as SearchResult[]);
-
-    watch(query, handleLazySearch);
+    const { query, results, handleLazySearch, highlightSearchText } = useSearch();
 
     return {
       query,
       results,
+      handleLazySearch,
       highlightSearchText,
     };
   },
