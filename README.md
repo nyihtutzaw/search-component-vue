@@ -17,5 +17,5 @@
 
 
 
-## Project Setup
+## Note
    You may need to use CORS testing extension to access Api for cross origin issues
